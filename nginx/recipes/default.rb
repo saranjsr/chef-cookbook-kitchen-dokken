@@ -1,4 +1,4 @@
-include_recipe 'nginx::service'
+#include_recipe 'nginx::service'
 
 package 'nginx' do
   action :install
@@ -36,7 +36,20 @@ template "nginx.conf" do
   mode 0644
 end
 
+template 'default' do
+  path  "#{node[:nginx][:dir]}/sites-available/default"
+  source 'default.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
 service 'nginx' do
   supports status: true
   action [:enable, :start]
 end
+
+#service "nginx" do
+#  supports :status => true, :start => true, :restart => true, :reload => true
+#  action :nothing
+#end
