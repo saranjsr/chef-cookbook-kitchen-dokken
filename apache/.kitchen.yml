@@ -1,0 +1,31 @@
+---
+driver:
+  name: dokken
+  chef_version: 14.3.37
+  privileged: true # because Docker and SystemD/Upstart
+  customize:
+    memory: '512'
+
+transport:
+  name: dokken
+
+provisioner:
+  name: dokken
+  deprecations_as_errors: true
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-16.04
+    driver:
+      image: ubuntu:16.04
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
+suites:
+  - name: default
+    driver:
+      ports: '80'
+    run_list:
+      - recipe[apache::default]
